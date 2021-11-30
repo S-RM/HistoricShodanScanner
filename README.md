@@ -1,6 +1,6 @@
 # Historic Shodan Scanner
 
-Historic Shodan Scanner is a simply Python utility to take a range of IP addresses and query Shodan for its historic Port and CVE data. This is useful to quickly assess the exposure of a Public IP estate during a cyber security incident.
+Historic Shodan Scanner is a simply Python utility that takes a range of IP addresses and queries Shodan for its historic Port and CVE data. This is useful to quickly assess the exposure of a Public IP estate during a cyber security incident.
 
 ## Requirements
 
