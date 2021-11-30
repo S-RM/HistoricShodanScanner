@@ -2,7 +2,7 @@
 import shodan
 from netaddr import IPNetwork
 
-apiKey = input("Please enter your Shodan api key: ")
+apiKey = input("Please enter your Shodan api key")
 # API KEY IN HERE
 api = shodan.Shodan(apiKey)
 
