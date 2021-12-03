@@ -1,17 +1,25 @@
 # Import code libraries
 import shodan
 from netaddr import IPNetwork
-import os 
+import os
+from decouple import config
 
-#apiKey = input("Please enter your Shodan api key")
-# API KEY IN HERE
-#api = shodan.Shodan(apiKey)
+# Get the API from a config file, if it exists
+try:
+    API_KEY = config('API')
+# If .env doesn't exist, ask for the key
+except:
+    API_KEY = input("Please enter your Shodan API key")
+
+# If .env does exist but is blank, ask for key
+if not API_KEY:
+    API_KEY = input("Please enter your Shodan API key")
 
 # Read text file, ignore newline characters. This is stored in 'ranges'.
 ranges = [line.rstrip() for line in open('ranges.txt')]
 
-shodanApiKey =  os.getenv('shodan_api_key')
-api = shodan.Shodan(shodanApiKey)
+# Create the API object
+api = shodan.Shodan(API_KEY)
 
 # Open the results csv now so not to overrite later
 with open("scan_result.csv", 'w', newline='') as file:
