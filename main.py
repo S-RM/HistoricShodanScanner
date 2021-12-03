@@ -1,13 +1,17 @@
 # Import code libraries
 import shodan
 from netaddr import IPNetwork
+import os 
 
-apiKey = input("Please enter your Shodan api key")
+#apiKey = input("Please enter your Shodan api key")
 # API KEY IN HERE
-api = shodan.Shodan(apiKey)
+#api = shodan.Shodan(apiKey)
 
 # Read text file, ignore newline characters. This is stored in 'ranges'.
 ranges = [line.rstrip() for line in open('ranges.txt')]
+
+shodanApiKey =  os.getenv('shodan_api_key')
+api = shodan.Shodan(shodanApiKey)
 
 # Open the results csv now so not to overrite later
 with open("scan_result.csv", 'w', newline='') as file:
