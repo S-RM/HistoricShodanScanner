@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Import code libraries
 import shodan
 from netaddr import IPNetwork
