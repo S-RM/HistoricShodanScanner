@@ -30,10 +30,13 @@ with open("scan_result.csv", 'w', newline='') as file:
     # Take the first ip range from the text we read in.
     for iprange in ranges:
         lineCount += 1
+        # Skip if it's a blank line
         if iprange == "":
             continue
+        # Test if IP range is valid
         try:
             IPNetwork(iprange)
+        # Notify user of erroneous IP range
         except:
             print(iprange, "is not a valid IP range.")
             print("Please remove or correct this range at line", lineCount, "and run the script again.")
