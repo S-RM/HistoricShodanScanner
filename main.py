@@ -22,19 +22,21 @@ ranges = [line.rstrip() for line in open('ranges.txt')]
 # Create the API object
 api = shodan.Shodan(API_KEY)
 
+lineCount = 0
 # Open the results csv now so not to overrite later
 with open("scan_result.csv", 'w', newline='') as file:
     firstLine = "IP,DATE,TIME,PORT,CVE\n"
     file.write(firstLine)
     # Take the first ip range from the text we read in.
     for iprange in ranges:
+        lineCount += 1
         if iprange == "":
             continue
         try:
             IPNetwork(iprange)
         except:
             print(iprange, "is not a valid IP range.")
-            print("Please remove or correct this range and run the script again.")
+            print("Please remove or correct this range at line", lineCount, "and run the script again.")
             quit()
         # For every ip within the ip range
         for ip in IPNetwork(iprange):
