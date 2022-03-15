@@ -28,15 +28,18 @@ with open("scan_result.csv", 'w', newline='') as file:
     file.write(firstLine)
     # Take the first ip range from the text we read in.
     for iprange in ranges:
+        if iprange == "":
+            continue
         try:
             IPNetwork(iprange)
         except:
-            print(iprange, " is not a valid IP range and has been skipped.")
-            continue
+            print(iprange, "is not a valid IP range.")
+            print("Please remove or correct this range and run the script again.")
+            quit()
         # For every ip within the ip range
         for ip in IPNetwork(iprange):
             try:
-                print("scanning ", ip, "...")
+                print("scanning", ip, "...")
                 # Call API function on IP, including history
                 result = api.host(str(ip), history=True)
                 data = result["data"]
@@ -51,7 +54,7 @@ with open("scan_result.csv", 'w', newline='') as file:
                         vulns = ""
                     line = line + vulns + "\n"
                     file.write(line)
-                print("Historic results found for ", ip, ".")
+                print("Historic results found for", ip)
             except shodan.APIError:
                 pass
 print("Script ran successfully, please check scan_result.csv")
