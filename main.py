@@ -24,7 +24,7 @@ api = shodan.Shodan(API_KEY)
 
 # Open the results csv now so not to overrite later
 with open("scan_result.csv", 'w', newline='') as file:
-    firstLine = "IP, DATE, TIME, PORT, CVE\n"
+    firstLine = "IP,DATE,TIME,PORT,CVE\n"
     file.write(firstLine)
     # Take the first ip range from the text we read in.
     for iprange in ranges:
