@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Import code libraries
+import contextlib
 import shodan
 from netaddr import IPNetwork
 import os
@@ -36,47 +37,46 @@ with open("scan_result.csv", 'w', newline='') as file:
         # Test if IP range is valid
         try:
             IPNetwork(iprange)
-        # Notify user of erroneous IP range
-        except:
+        except Exception:
             print(iprange, "is not a valid IP range.")
             print("Please remove or correct this range at line", lineCount, "and run the script again.")
             quit()
         # For every ip within the ip range
         for ip in IPNetwork(iprange):
-            try:
+            with contextlib.suppress(shodan.APIError):
                 print("scanning", ip, "...")
                 # Call API function on IP, including history
                 historicalResults = api.host(str(ip), history=True)
                 recentResults = api.host(str(ip))
                 historicalData = historicalResults["data"]
                 recentData = recentResults["data"]
-                
+
                 for objects in recentData:
                     # print(objects)
-                    timestamp = objects['timestamp'].split("T")[0] + "," + objects['timestamp'].split("T")[1].split(".")[0]
+                    timestamp = objects['timestamp'].split("T")[0] + "," + \
+                                objects['timestamp'].split("T")[1].split(".")[0]
                     # Line = IP, DATE, TIME, PORT, CVE
-                    line = str(ip) + "," + timestamp + "," + str(objects["port"]) + ","
+                    line = f"{str(ip)},{timestamp}," + str(objects["port"]) + ","
                     # Append CVE vulnerabilities to end of line, if none are found catch the error and append nothing
                     try:
-                        vulns = str(list(objects['vulns'].keys())).replace(',','.')
+                        vulns = str(list(objects['vulns'].keys())).replace(',', '.')
                     except KeyError:
                         vulns = ""
                     line = line + vulns + "\n"
                     file.write(line)
 
                 for objects in historicalResults["data"]:
-                    timestamp = objects['timestamp'].split("T")[0] + "," + objects['timestamp'].split("T")[1].split(".")[0]
+                    timestamp = objects['timestamp'].split("T")[0] + "," + \
+                                objects['timestamp'].split("T")[1].split(".")[0]
                     # Line = IP, DATE, TIME, PORT, CVE
-                    line = str(ip) + "," + timestamp + "," + str(objects["port"]) + ","
+                    line = f"{str(ip)},{timestamp}," + str(objects["port"]) + ","
                     # Append CVE vulnerabilities to end of line, if none are found catch the error and append nothing
                     try:
-                        vulns = str(list(objects['vulns'].keys())).replace(',','.')
+                        vulns = str(list(objects['vulns'].keys())).replace(',', '.')
                     except KeyError:
                         vulns = ""
                     line = line + vulns + "\n"
                     file.write(line)
-                
+
                 print("Results found for", ip)
-            except shodan.APIError:
-                pass
 print("Script ran successfully, please check scan_result.csv")
